@@ -258,6 +258,7 @@ class DRQAgent(object):
         self.critic_optimizer.step()
 
         self.critic.log(logger, step)
+        return torch.pow(current_Q1 - target_Q, 2) + torch.pow(current_Q2 - target_Q, 2) + torch.pow(Q1_aug - target_Q, 2) + torch.pow(Q2_aug - target_Q, 2)
 
     def update_actor_and_alpha(self, obs, logger, step):
         # detach conv filters, so we don't update them with the actor loss
@@ -291,13 +292,14 @@ class DRQAgent(object):
         self.log_alpha_optimizer.step()
 
     def update(self, replay_buffer, logger, step):
-        obs, action, reward, next_obs, not_done, obs_aug, next_obs_aug = replay_buffer.sample(
-            self.batch_size)
+        obs, action, reward, next_obs, not_done, obs_aug, next_obs_aug, idxs = replay_buffer.sample(
+            self.batch_size, logger, step)
 
         logger.log('train/batch_reward', reward.mean(), step)
 
-        self.update_critic(obs, obs_aug, action, reward, next_obs,
+        priorities = self.update_critic(obs, obs_aug, action, reward, next_obs,
                            next_obs_aug, not_done, logger, step)
+        replay_buffer.update_priorities(idxs, priorities)
 
         if step % self.actor_update_frequency == 0:
             self.update_actor_and_alpha(obs, logger, step)

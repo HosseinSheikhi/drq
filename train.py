@@ -61,12 +61,13 @@ class Workspace(object):
 
         self.cfg = cfg
 
-        self.logger = Logger(self.work_dir,
+        self.logger = Logger(self.work_dir+"_"+self.cfg.env+"_effective_{}".format(self.cfg.effective_aug),
                              save_tb=cfg.log_save_tb,
                              log_frequency=cfg.log_frequency_step,
                              agent=cfg.agent.name,
                              action_repeat=cfg.action_repeat)
 
+        self.effective_aug = self.cfg.effective_aug
         utils.set_seed_everywhere(cfg.seed)
         self.device = torch.device(cfg.device)
         self.env = make_env(cfg)
@@ -82,7 +83,7 @@ class Workspace(object):
         self.replay_buffer = ReplayBuffer(self.env.observation_space.shape,
                                           self.env.action_space.shape,
                                           cfg.replay_buffer_capacity,
-                                          self.cfg.image_pad, self.device)
+                                          self.cfg.image_pad, self.device, self.effective_aug)
 
         self.video_recorder = VideoRecorder(
             self.work_dir if cfg.save_video else None)
