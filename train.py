@@ -61,7 +61,7 @@ class Workspace(object):
 
         self.cfg = cfg
 
-        self.logger = Logger(self.work_dir+"_"+self.cfg.env+"_effective_{}".format(self.cfg.effective_aug),
+        self.logger = Logger(self.work_dir+"_"+self.cfg.env+"_eval2k_effective_{}_seed_{}".format(self.cfg.effective_aug, self.cfg.seed),
                              save_tb=cfg.log_save_tb,
                              log_frequency=cfg.log_frequency_step,
                              agent=cfg.agent.name,

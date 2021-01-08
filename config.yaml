@@ -1,25 +1,26 @@
 # env
-env: cartpole_swingup
-effective_aug: False # effective data aug
+env: reacher_easy
+action_repeat: 4
+seed: 6
+effective_aug: True # effective data aug
 # IMPORTANT: if action_repeat is used the effective number of env steps needs to be
 # multiplied by action_repeat in the result graphs.
 # This is a common practice for a fair comparison.
 # See the 2nd paragraph in Appendix C of SLAC: https://arxiv.org/pdf/1907.00953.pdf
 # See Dreamer TF2's implementation: https://github.com/danijar/dreamer/blob/02f0210f5991c7710826ca7881f19c64a012290c/dreamer.py#L340
-action_repeat: 8
 # train
 num_train_steps: 1000000
 num_train_iters: 1
 num_seed_steps: 1000
 replay_buffer_capacity: 100000
-seed: 1
+
 # eval
-eval_frequency: 5000
+eval_frequency: 2000
 num_eval_episodes: 10
 # misc
 log_frequency_step: 10000
 log_save_tb: true
-save_video: true
+save_video: false
 device: cuda
 # observation
 image_size: 84
